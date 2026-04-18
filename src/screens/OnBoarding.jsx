@@ -1,13 +1,37 @@
 import { View, Image, StyleSheet, TouchableOpacity } from 'react-native';
-import React from 'react';
+import React, { useEffect } from 'react';
 import AppIntroSlider from 'react-native-app-intro-slider';
 import { scale } from 'react-native-size-matters';
 import Label from '../components/Label';
 import * as Animatable from 'react-native-animatable';
 import Container from '../components/Container';
 import { clearPersistedState } from '../redux/store/Store';
+import { API_BASE_URL } from '../config/apiConfig';
 
 export default function OnBoarding({ navigation }) {
+
+  // Despertar el servidor al montar el componente
+  useEffect(() => {
+    const wakeUpServer = async () => {
+      try {
+        console.log('🔔 Despertando servidor...');
+        const healthUrl = API_BASE_URL.replace('/api', '/health');
+        const response = await fetch(healthUrl, {
+          method: 'GET',
+          headers: { 'Content-Type': 'application/json' }
+        });
+        
+        if (response.ok) {
+          const data = await response.json();
+          console.log('✅ Servidor despierto:', data);
+        }
+      } catch (error) {
+        console.log('⚠️ Error al despertar servidor (puede estar iniciando):', error.message);
+      }
+    };
+
+    wakeUpServer();
+  }, []);
 
   const _onLogout = async () => {
     await handleLogout();
