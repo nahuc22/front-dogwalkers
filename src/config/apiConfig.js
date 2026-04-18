@@ -10,7 +10,7 @@ export const API_CONFIG = {
   remote: 'https://e7bb003c5407.ngrok-free.app/api', // Actualiza esta URL con ngrok
   
   // 🌐 Producción (Render.com + Aiven)
-  production: 'https://dog-walkers-api.onrender.com/api' // ⬅️ URL real de Render
+  production: 'https://back-dogwalkers.onrender.com/api' // ⬅️ URL real de Render
 };
 
 // ⚠️ IMPORTANTE: Cambia a 'production' para usar el backend desplegado
