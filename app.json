@@ -33,15 +33,6 @@
     "web": {
       "favicon": "./assets/favicon.png"
     },
-    "plugins": [
-      [
-        "expo-image-picker",
-        {
-          "photosPermission": "La app necesita acceso a tus fotos para cambiar tu imagen de perfil.",
-          "cameraPermission": "La app necesita acceso a tu cámara para tomar fotos."
-        }
-      ]
-    ],
     "extra": {
       "eas": {
         "projectId": "e0c1b121-15b7-4d1b-9406-ec02b94a1ab8"
