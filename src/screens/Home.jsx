@@ -45,11 +45,11 @@ export default function HomeScreen({ setIsLoggedIn }) {
     console.log('👤 Home - User role:', role);
     console.log('📊 Home - Mapped users count:', mappedUsers.length);
     
-    // Marcar que ya no es carga inicial cuando llegan datos
-    if (users.length > 0 && initialLoad) {
+    // Marcar que ya no es carga inicial cuando termine de cargar (con o sin datos)
+    if (!loading && initialLoad) {
       setInitialLoad(false);
     }
-  }, [users, role]);
+  }, [users, role, loading, initialLoad]);
 
   // Mapear usuarios/perros según el rol usando función centralizada
   const mappedUsers = mapUsersToCards(users, role).filter(item => {
