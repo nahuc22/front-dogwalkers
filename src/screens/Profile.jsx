@@ -6,7 +6,7 @@ import { useNavigation } from '@react-navigation/native';
 import { useDispatch, useSelector } from 'react-redux';
 import { logout } from '../redux/slices/user/userSlice';
 import { updateProfile } from '../redux/actions/users/userAction';
-import * as ImagePicker from 'expo-image-picker';
+import { launchImageLibrary } from 'react-native-image-picker';
 import { uploadUserProfileImage } from '../services/imageService';
 import { getPetsByOwner, deletePet } from '../services/petService';
 import Toast from 'react-native-toast-message';
@@ -152,27 +152,28 @@ export default function Profile({ setIsLoggedIn }) {
   // Función para seleccionar y subir imagen de perfil
   const handlePickImage = async () => {
     try {
-      // Solicitar permisos
-      const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
-      
-      if (status !== 'granted') {
-        Alert.alert(
-          'Permisos necesarios',
-          'Necesitamos acceso a tu galería para cambiar la foto de perfil',
-          [{ text: 'OK' }]
-        );
+      // Abrir selector de imágenes con react-native-image-picker
+      const result = await launchImageLibrary({
+        mediaType: 'photo',
+        quality: 0.8,
+        maxWidth: 1024,
+        maxHeight: 1024,
+      });
+
+      // Verificar si el usuario canceló
+      if (result.didCancel) {
+        console.log('Usuario canceló la selección de imagen');
         return;
       }
 
-      // Abrir selector de imágenes
-      const result = await ImagePicker.launchImageLibraryAsync({
-        mediaTypes: ImagePicker.MediaTypeOptions.Images,
-        allowsEditing: true,
-        aspect: [1, 1],
-        quality: 0.8,
-      });
+      // Verificar si hay error
+      if (result.errorCode) {
+        Alert.alert('Error', result.errorMessage || 'No se pudo seleccionar la imagen');
+        return;
+      }
 
-      if (!result.canceled && result.assets && result.assets.length > 0) {
+      // Verificar si hay imagen seleccionada
+      if (result.assets && result.assets.length > 0) {
         const selectedImage = result.assets[0];
         
         // Mostrar preview inmediato

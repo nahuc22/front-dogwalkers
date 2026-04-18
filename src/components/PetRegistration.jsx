@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, TouchableOpacity, ScrollView, Image, TextInput, Alert, ActivityIndicator } from 'react-native';
 import { scale } from 'react-native-size-matters';
 import { Ionicons, MaterialIcons } from '@expo/vector-icons';
-import * as ImagePicker from 'expo-image-picker';
+import { launchImageLibrary } from 'react-native-image-picker';
 import Toast from 'react-native-toast-message';
 import { uploadPetProfileImage } from '../services/imageService';
 import Label from './Label';
@@ -104,27 +104,28 @@ export default function PetRegistration({ onSave, onCancel, initialData = null, 
 
   const handlePhotoUpload = async () => {
     try {
-      // Solicitar permisos
-      const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
-      
-      if (status !== 'granted') {
-        Alert.alert(
-          'Permisos necesarios',
-          'Necesitamos acceso a tu galería para agregar la foto de tu mascota',
-          [{ text: 'OK' }]
-        );
+      // Abrir selector de imágenes con react-native-image-picker
+      const result = await launchImageLibrary({
+        mediaType: 'photo',
+        quality: 0.8,
+        maxWidth: 1024,
+        maxHeight: 1024,
+      });
+
+      // Verificar si el usuario canceló
+      if (result.didCancel) {
+        console.log('Usuario canceló la selección de imagen');
         return;
       }
 
-      // Abrir selector de imágenes
-      const result = await ImagePicker.launchImageLibraryAsync({
-        mediaTypes: ImagePicker.MediaTypeOptions.Images,
-        allowsEditing: true,
-        aspect: [1, 1],
-        quality: 0.8,
-      });
+      // Verificar si hay error
+      if (result.errorCode) {
+        Alert.alert('Error', result.errorMessage || 'No se pudo seleccionar la imagen');
+        return;
+      }
 
-      if (!result.canceled && result.assets && result.assets.length > 0) {
+      // Verificar si hay imagen seleccionada
+      if (result.assets && result.assets.length > 0) {
         const selectedImage = result.assets[0];
         
         // Mostrar preview inmediato
