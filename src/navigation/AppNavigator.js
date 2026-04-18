@@ -10,11 +10,18 @@ import { LogBox } from 'react-native';
 // LogBox.ignoreAllLogs();
 export default function AppNavigator() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const { isAuthenticated } = useSelector((state) => state.user);
+  const user = useSelector((state) => state.user);
+  const isAuthenticated = user?.isAuthenticated || false;
+
+  console.log('AppNavigator - isAuthenticated:', isAuthenticated, 'isLoggedIn:', isLoggedIn);
 
   // Sincronizar el estado local con Redux
   useEffect(() => {
-    setIsLoggedIn(isAuthenticated);
+    if (isAuthenticated) {
+      setIsLoggedIn(true);
+    } else {
+      setIsLoggedIn(false);
+    }
   }, [isAuthenticated]);
 
   return (
@@ -23,7 +30,10 @@ export default function AppNavigator() {
         {isLoggedIn ? (
           <TabCreator setIsLoggedIn={setIsLoggedIn} />
         ) : (
-          <RouterList setIsLoggedIn={setIsLoggedIn} />
+          <RouterList 
+            setIsLoggedIn={setIsLoggedIn} 
+            initialRoute="OnBoarding"
+          />
         )}
       </ErrorBoundry>
     </NavigationContainer>

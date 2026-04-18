@@ -23,7 +23,13 @@ export default function NearYouCard({item}) {
     }
   return (
     <View style={{ borderRadius: scale(14), justifyContent: 'center' , alignItems: 'center'}}>
-        <ImageBackground resizeMode='cover' source={img} style={{ height:scale(176), width: scale(200), borderRadius: scale(14), overflow:'hidden'}}/>
+        {img ? (
+            <ImageBackground resizeMode='cover' source={img} style={{ height:scale(176), width: scale(200), borderRadius: scale(14), overflow:'hidden'}}/>
+        ) : (
+            <View style={{ height:scale(176), width: scale(200), borderRadius: scale(14), backgroundColor: appColors.lightGray, justifyContent: 'center', alignItems: 'center' }}>
+                <MaterialIcons name="person" size={scale(60)} color={appColors.gray} />
+            </View>
+        )}
         {_renderRating()}
             <View style={{width:scale(200) , paddingVertical:scale(20), flexDirection:'row', justifyContent:'space-between' , alignItem: 'center'}}>
                 <View>
@@ -33,9 +39,11 @@ export default function NearYouCard({item}) {
                     <Label text={`${distance} km from you`} style={{fontSize: scale(10), marginLeft: scale(5)}} />
                     </View>
                 </View>
-                <View backgroundColor="black" style={{ paddingVertical:scale(8), paddingHorizontal:scale(5)}} borderRadius={scale(7)} >
-                    <Label text={`$${price}/h`}  style={{color:appColors.white, paddingHorizontal:scale(10)}} bold /> 
-                </View>
+                {price !== '0' && (
+                    <View backgroundColor="black" style={{ paddingVertical:scale(8), paddingHorizontal:scale(5)}} borderRadius={scale(7)} >
+                        <Label text={`$${parseInt(price) || price}/h`}  style={{color:appColors.white, paddingHorizontal:scale(10)}} bold /> 
+                    </View>
+                )}
             </View>
     </View>
   )

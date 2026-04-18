@@ -6,13 +6,13 @@ import Label from '../components/Label';
 
 export default function Choice({ navigation }) {
   const handleWalkerChoice = () => {
-    // Navegar al registro como paseador
-    navigation.navigate('Register', { userType: 'walker' });
+    // Navegar al login como paseador
+    navigation.navigate('Login', { userType: 'walker' });
   };
 
   const handleOwnerChoice = () => {
-    // Navegar al login para usuarios/dueños
-    navigation.navigate('Login');
+    // Navegar al login como usuario/dueño
+    navigation.navigate('Login', { userType: 'owner' });
   };
 
   const handleBack = () => {

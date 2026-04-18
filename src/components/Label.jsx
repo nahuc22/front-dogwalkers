@@ -3,7 +3,7 @@ import { StyleSheet, Text, TouchableOpacity } from 'react-native'
 import { scale } from 'react-native-size-matters'
 import { appColors } from '../utils/appColors'
 
-function Label({ text , style, bold, numberOfLines, ellipsizeMode , onPress}) {
+function Label({ text , style, bold, numberOfLines, ellipsizeMode , onPress, onTextLayout}) {
     if (onPress) {
         return (
             <TouchableOpacity onPress={onPress}>
@@ -11,6 +11,7 @@ function Label({ text , style, bold, numberOfLines, ellipsizeMode , onPress}) {
                     style={[styles.label, style, bold && styles.bold]}
                     numberOfLines={numberOfLines}
                     ellipsizeMode={ellipsizeMode}
+                    onTextLayout={onTextLayout}
                 >
                     {text}
                 </Text>
@@ -22,6 +23,7 @@ function Label({ text , style, bold, numberOfLines, ellipsizeMode , onPress}) {
             style={[styles.label, style, bold && styles.bold]}
             numberOfLines={numberOfLines}
             ellipsizeMode={ellipsizeMode}
+            onTextLayout={onTextLayout}
         >
             {text}
         </Text>

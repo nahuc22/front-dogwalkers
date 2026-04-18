@@ -11,13 +11,20 @@ import { useNavigation } from '@react-navigation/native';
 import BackButton from '../components/BackButton.jsx';
 import { register } from '../redux/actions/users/userAction.jsx'; // Importa tu action
 
-export default function Register() {
+export default function Register({ route }) {
   const dispatch = useDispatch();
   const navigation = useNavigation();
-  const { loading, error } = useSelector((state) => state.user.registerStatus); // Accede al estado de register desde Redux
+  const userState = useSelector((state) => state.user);
+  const { loading, error } = userState?.registerStatus || { loading: false, error: null };
+  const userType = route.params?.userType || 'owner'; // Default a 'owner' si no viene
+
+  console.log('User state:', userState);
+  console.log('Loading:', loading);
 
   const [formValues, setFormValues] = useState({
     name: '',
+    lastname: '',
+    age: '',
     email: '',
     password: '',
   });
@@ -32,37 +39,74 @@ export default function Register() {
       placeholder: 'Nombre',
     },
     {
+      name: 'lastname',
+      placeholder: 'Apellido',
+    },
+    {
+      name: 'age',
+      placeholder: 'Edad',
+      keyboardType: 'numeric',
+    },
+    {
       name: 'email',
       placeholder: 'Email',
+      keyboardType: 'email-address',
     },
     {
       name: 'password',
-      placeholder: 'Contraseña',
+      placeholder: 'Contraseña (mínimo 6 caracteres)',
       secureTextEntry: true,
     },
   ];
 
-  const handleRegister = () => {
-    // if (!formValues.name || !formValues.email || !formValues.password) {
-    //   Alert.alert('Formulario incompleto', 'Por favor, completa todos los campos.');
-    //   return;
-    // }
-  
-    dispatch(register(formValues))
-      .unwrap()
-      .then(() => {
-        setTimeout(() => {
-          navigation.navigate('Login');
-        }, 2000);
-      })
-      .catch((err) => {
-        return err
-      });
+  const handleRegister = async () => {
+    // Validación básica
+    if (!formValues.name || !formValues.email || !formValues.password) {
+      Alert.alert('Formulario incompleto', 'Por favor, completa al menos nombre, email y contraseña.');
+      return;
+    }
+
+    if (formValues.password.length < 6) {
+      Alert.alert('Contraseña inválida', 'La contraseña debe tener al menos 6 caracteres.');
+      return;
+    }
+
+    try {
+      // Preparar datos para enviar al backend
+      const userData = {
+        name: formValues.name.trim(),
+        email: formValues.email.trim(),
+        password: formValues.password.trim(),
+        role: userType, // ← Agregar el rol desde Choice
+      };
+
+      // Agregar campos opcionales solo si tienen valor
+      if (formValues.lastname && formValues.lastname.trim()) {
+        userData.lastname = formValues.lastname.trim();
+      }
+      
+      if (formValues.age && formValues.age.trim()) {
+        userData.age = parseInt(formValues.age);
+      }
+
+      console.log('Datos a enviar:', userData);
+      console.log('Registrando como:', userType);
+
+      await dispatch(register(userData)).unwrap();
+      
+      // Registro exitoso, navegar al login después de 2 segundos
+      setTimeout(() => {
+        navigation.navigate('Login');
+      }, 2000);
+    } catch (err) {
+      console.error('Error en registro:', err);
+      Alert.alert('Error', err || 'Hubo un problema al registrarte. Intenta de nuevo.');
+    }
   };
 
   return (
     <Container style={{ paddingHorizontal: scale(10), marginTop: scale(30) }}>
-      <BackButton destination="Login"/>
+      <BackButton />
       <View style={{ paddingVertical: scale(10), left: scale(5) }}>
         <Label text="¡Regístrate!" style={{ fontSize: scale(34) }} bold />
         <Label

@@ -22,6 +22,14 @@
       "env": {
         "NPM_FLAGS": "--legacy-peer-deps"
       }
+    },
+    "apk": {
+      "android": {
+        "buildType": "apk"
+      },
+      "env": {
+        "NPM_FLAGS": "--legacy-peer-deps"
+      }
     }
   },
   "submit": {

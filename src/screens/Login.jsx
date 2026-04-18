@@ -1,6 +1,6 @@
 // React - Native
 import React, {  useState  } from 'react';
-import { View } from 'react-native';
+import { View, Alert } from 'react-native';
 import { scale } from 'react-native-size-matters';
 import { useNavigation } from '@react-navigation/native';
 import { Image } from 'react-native';
@@ -17,10 +17,11 @@ import BackButton from '../components/BackButton.jsx';
 // Utils
 import { appColors } from '../utils/appColors.js';
 
-export default function Login({ setIsLoggedIn }) {
+export default function Login({ route, setIsLoggedIn }) {
   const dispatch = useDispatch();
   const navigation = useNavigation();
   const { isAuthenticated, loading } = useSelector((state) => state.user);
+  const userType = route.params?.userType || 'owner'; // Default a 'owner' si no viene
 
     const [formValues, setFormValues] = useState({
       email: '',
@@ -47,9 +48,10 @@ export default function Login({ setIsLoggedIn }) {
     
     const handleLogin = async () => {
       try {
+        console.log('Form values antes de enviar:', formValues);
         const result = await dispatch(login({ 
-          email: formValues.email, 
-          password: formValues.password })
+          email: formValues.email.trim(), 
+          password: formValues.password.trim() })
         ).unwrap(); 
         console.log('Login exitoso:', result);
 
@@ -66,7 +68,7 @@ export default function Login({ setIsLoggedIn }) {
     return (
       <Container style={{ paddingHorizontal: scale(10) }}>
         <View style={{ marginTop: scale(30) }}>
-          <BackButton />
+          <BackButton destination="Choice" />
         </View>
         <View style={{ paddingVertical: scale(10) }}>
           <Label text="¡Bienvenido!" style={{ fontSize: scale(34) }} bold />
@@ -92,7 +94,7 @@ export default function Login({ setIsLoggedIn }) {
               style={{ fontSize: scale(14), color: 'blue', textDecorationLine: 'underline' }}
               onPress={() => {
                 setFormValues({ email: '', password: '' });
-                navigation.navigate('RegisterOwner');
+                navigation.navigate('Register', { userType });
               }}
             />
           </View>
@@ -109,9 +111,7 @@ export default function Login({ setIsLoggedIn }) {
           <View style={{ flexDirection: 'column', justifyContent: 'space-between', height: 150 }}>
             <CustomButton
               onPress={() => {
-                // Simular conexión con Google y navegar al home
-                setIsLoggedIn(true);
-                navigation.navigate('TabCreator');
+                Alert.alert('Próximamente', 'Esta función estará disponible pronto.');
               }}
               iconLeft={
                 <View style={{ marginRight: scale(5), alignItems: 'flex-start' }}>
@@ -129,6 +129,9 @@ export default function Login({ setIsLoggedIn }) {
               rippleColor={appColors.lightBlue}
             />
             <CustomButton
+              onPress={() => {
+                Alert.alert('Próximamente', 'Esta función estará disponible pronto.');
+              }}
               iconLeft={<MaterialIcons name="facebook" size={40} color="white" />}
               style={{ flex: 1, width: '100%' }}
               label={'Conéctate con Facebook'}

@@ -8,9 +8,10 @@ import { View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Home from '../screens/Home';
 import Inbox from '../screens/Inbox';
-import ScheduleScreen from '../screens/Schedule';
+import WalkerProfileScreen from '../screens/WalkerProfile';
 import Profile from '../screens/Profile';
 import ChatScreen from '../screens/ChatScreen';
+import PetRegistrationWrapper from '../components/PetRegistrationWrapper';
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -21,8 +22,9 @@ export default function TabCreator({ setIsLoggedIn }) {
       <Stack.Screen name="Tabs" options={{ headerShown: false }}>
         {() => <TabNavigator setIsLoggedIn={setIsLoggedIn} />}
       </Stack.Screen>
-      <Stack.Screen name="Schedule" component={ScheduleScreen} />
+      <Stack.Screen name="WalkerProfile" component={WalkerProfileScreen} />
       <Stack.Screen name="ChatScreen" component={ChatScreen} />
+      <Stack.Screen name="PetRegistration" component={PetRegistrationWrapper} />
     </Stack.Navigator>
   );
 }

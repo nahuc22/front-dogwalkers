@@ -9,11 +9,19 @@ import TabCreator from './TabCreator';
 
 const Stack = createStackNavigator();
 
-const RouterList = ({setIsLoggedIn }) => {
+const RouterList = ({setIsLoggedIn, initialRoute = 'OnBoarding' }) => {
+  console.log('RouterList rendering, initialRoute:', initialRoute);
+  
   return (
-    <Stack.Navigator screenOptions={{ headerShown: false }}>
+    <Stack.Navigator 
+      initialRouteName={initialRoute}
+      screenOptions={{ headerShown: false }}
+    >
       <Stack.Screen name="OnBoarding">
-        {(props) => <OnBoardingScreen {...props} setIsLoggedIn={setIsLoggedIn} />}
+        {(props) => {
+          console.log('OnBoarding screen props:', props);
+          return <OnBoardingScreen {...props} setIsLoggedIn={setIsLoggedIn} />;
+        }}
       </Stack.Screen>
       <Stack.Screen name="Choice">
         {(props) => <ChoiceScreen {...props} setIsLoggedIn={setIsLoggedIn} />}
