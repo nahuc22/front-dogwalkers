@@ -13,6 +13,7 @@ import SearchField from '../components/SearchField.jsx';
 import NearYouCard from '../components/NearYouCard.jsx';
 import { fetchUsersList } from '../redux/slices/usersListSlice';
 import Toast from 'react-native-toast-message';
+import { mapUsersToCards } from '../utils/dataMappers';
 
 export default function HomeScreen({ setIsLoggedIn }) {
   const navigator = useNavigation();
@@ -50,33 +51,8 @@ export default function HomeScreen({ setIsLoggedIn }) {
     }
   }, [users, role]);
 
-  // Mapear usuarios/perros según el rol
-  const mappedUsers = users.map(item => {
-    if (role === 'owner') {
-      // Owners ven walkers
-      return {
-        id: item.id.toString(),
-        name: `${item.name} ${item.lastname || ''}`.trim(),
-        img: item.profileImage ? { uri: item.profileImage } : null,
-        distance: '5',
-        price: item.price || '5',
-        rating: item.rating || '0.0',
-        walkerData: item,
-      };
-    } else {
-      // Walkers ven perros
-      return {
-        id: item.id.toString(),
-        name: item.name,
-        img: item.profileImage ? { uri: item.profileImage } : null,
-        distance: '5',
-        price: '0',
-        rating: '0.0',
-        petData: item,
-        ownerName: `${item.ownerName} ${item.ownerLastname || ''}`.trim(),
-      };
-    }
-  }).filter(item => {
+  // Mapear usuarios/perros según el rol usando función centralizada
+  const mappedUsers = mapUsersToCards(users, role).filter(item => {
     // Filtrar al usuario logueado solo si es owner viendo walkers
     if (role === 'owner') {
       return item.walkerData?.userId !== profile?.id;
