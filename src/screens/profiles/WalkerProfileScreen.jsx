@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { ImageBackground, Pressable, View, Text, TouchableOpacity, FlatList, StyleSheet, TextInput, Alert, ActivityIndicator } from 'react-native';
-import { launchImageLibrary } from 'react-native-image-picker';
+import * as ImagePicker from 'expo-image-picker';
 import { MaterialIcons } from '@expo/vector-icons';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { scale } from 'react-native-size-matters';
@@ -74,24 +74,20 @@ export default function WalkerProfileScreen() {
 
     const handleSelectCoverImage = async () => {
         try {
-            const result = await launchImageLibrary({
-                mediaType: 'photo',
+            const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+            
+            if (permissionResult.granted === false) {
+                Alert.alert('Permisos necesarios', 'Necesitamos permisos para acceder a tus fotos');
+                return;
+            }
+
+            const result = await ImagePicker.launchImageLibraryAsync({
+                mediaTypes: ImagePicker.MediaTypeOptions.Images,
+                allowsEditing: true,
                 quality: 0.8,
-                maxWidth: 1920,
-                maxHeight: 1080,
             });
 
-            if (result.didCancel) {
-                console.log('Usuario canceló la selección de imagen');
-                return;
-            }
-
-            if (result.errorCode) {
-                Alert.alert('Error', result.errorMessage || 'No se pudo seleccionar la imagen');
-                return;
-            }
-
-            if (result.assets && result.assets.length > 0) {
+            if (!result.canceled && result.assets && result.assets.length > 0) {
                 const selectedImage = result.assets[0];
                 
                 setEditedCoverImage(selectedImage.uri);
