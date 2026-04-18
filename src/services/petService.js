@@ -12,7 +12,9 @@ export const getAllPets = async (location, limit = 20) => {
     if (location) params.append('location', location);
     params.append('limit', limit.toString());
     
-    const response = await fetch(`${API_BASE_URL}/pets?${params}`, {
+    const url = `${API_BASE_URL}/pets?${params}`;
+    
+    const response = await fetch(url, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -26,7 +28,7 @@ export const getAllPets = async (location, limit = 20) => {
     const data = await response.json();
     return data;
   } catch (error) {
-    console.error('Error fetching pets:', error);
+    console.error('❌ Error fetching pets:', error);
     throw error;
   }
 };
