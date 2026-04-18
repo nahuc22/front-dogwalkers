@@ -15,7 +15,7 @@ export const uploadUserProfileImage = async (userId, role, imageFile) => {
     formData.append('image', {
       uri: imageFile.uri,
       type: imageFile.type || 'image/jpeg',
-      name: imageFile.fileName || `profile_${userId}.jpg`,
+      name: imageFile.name || `profile_${userId}.jpg`,
     });
     
     // Agregar el rol
@@ -59,7 +59,7 @@ export const uploadWalkerCoverImage = async (userId, imageFile) => {
     formData.append('image', {
       uri: imageFile.uri,
       type: imageFile.type || 'image/jpeg',
-      name: imageFile.fileName || `cover_${userId}.jpg`,
+      name: imageFile.name || `cover_${userId}.jpg`,
     });
 
     const response = await fetch(
@@ -99,7 +99,7 @@ export const uploadPetProfileImage = async (petId, imageFile) => {
     formData.append('image', {
       uri: imageFile.uri,
       type: imageFile.type || 'image/jpeg',
-      name: imageFile.fileName || `pet_${petId}.jpg`,
+      name: imageFile.name || `pet_${petId}.jpg`,
     });
 
     const response = await fetch(

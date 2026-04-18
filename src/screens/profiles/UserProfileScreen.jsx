@@ -185,7 +185,7 @@ export default function UserProfileScreen({ setIsLoggedIn }) {
           const imageFile = {
             uri: selectedImage.uri,
             type: 'image/jpeg',
-            fileName: `profile_${userId}_${Date.now()}.jpg`,
+            name: `profile_${userId}_${Date.now()}.jpg`,
           };
 
           const response = await uploadUserProfileImage(userId, role, imageFile);

@@ -181,7 +181,7 @@ async function handlePetPhoto(petData, petId, savedPet, userId) {
       const imageFile = {
         uri: petData.photo,
         type: 'image/jpeg',
-        fileName: `pet_${petIdToUse}_${Date.now()}.jpg`,
+        name: `pet_${petIdToUse}_${Date.now()}.jpg`,
       };
 
       await uploadPetProfileImage(petIdToUse, imageFile);

@@ -138,7 +138,7 @@ export default function PetRegistration({ onSave, onCancel, initialData = null, 
             const imageFile = {
               uri: selectedImage.uri,
               type: 'image/jpeg',
-              fileName: `pet_${petId}_${Date.now()}.jpg`,
+              name: `pet_${petId}_${Date.now()}.jpg`,
             };
 
             const response = await uploadPetProfileImage(petId, imageFile);
